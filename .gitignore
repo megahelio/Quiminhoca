@@ -1,0 +1,4 @@
+/docker/redis-data
+**/__pycache__
+.venv**
+otras apps

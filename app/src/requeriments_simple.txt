@@ -1,0 +1,5 @@
+FastAPI
+requests
+redis
+pydantic
+uvicorn
