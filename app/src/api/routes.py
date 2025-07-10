@@ -1,11 +1,14 @@
+import traceback
 from fastapi import APIRouter, HTTPException
 from models.formula_request import FormulaRequest
-from services.pubchem_service import query_pubchem_by_formula
 from utils.cache import get_cache_key
-from config import redis_server
+from config import redis_server, get_logger
+import importlib
 import json
 
 router = APIRouter()
+
+logger = get_logger(__name__)
 
 @router.post(
     "/lookup",
@@ -36,17 +39,36 @@ router = APIRouter()
         400: {"description": "Fuente no soportada aún"}
     })
 def lookup_formula(req: FormulaRequest):
-    formula = req.formula.upper()
-    source = req.sources[0]  # por ahora solo pubchem
-    cache_key = get_cache_key(formula, source)
+    logger.debug(f"Request: {vars(req)}")
+    results = []
+    for source in req.sources:
+        source_func = get_source_function(source)
 
-    if redis_server.exists(cache_key):
-        return {"source": source, "cached": True, "results": json.loads(redis_server.get(cache_key).decode("utf-8"))}
+        cache_key = get_cache_key(req.formula.upper(), source)
+        if redis_server and redis_server.exists(cache_key):
+            source_results = json.loads(redis_server.get(cache_key).decode("utf-8"))
+            cached = True
+        else:
+            source_results = source_func(req)
+            if redis_server:
+                redis_server.set(cache_key, json.dumps(source_results), ex=86400)
+            cached = False
+        results.append({
+            "source": source,
+            "cached": cached,
+            "results": source_results
+        })
+    return results
 
-    if source == "pubchem":
-        results = query_pubchem_by_formula(formula)
-    else:
-        raise HTTPException(status_code=400, detail="Fuente no soportada")
-
-    redis_server.set(cache_key, json.dumps(results), ex=86400)  # cachea por 1 día = 86400 segundos
-    return {"source": source, "cached": False, "results": results}
+def get_source_function(source: str):
+    # Cada fuente debe tener un módulo llamado services.{source}_service y una función llamada query
+    module_name = f"services.{source}_service"
+    func_name = "query"
+    try:
+        logger.info(f"{source} {module_name} {func_name}")
+        module = importlib.import_module(module_name)
+        return getattr(module, func_name)
+    except (ModuleNotFoundError, AttributeError) as e:
+        logger.error(f"Error importando {module_name}.{func_name}: {e}")
+        # logger.error(traceback.format_exc())
+        raise HTTPException(status_code=400, detail=f"Fuente no soportada: {source}")

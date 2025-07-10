@@ -54,7 +54,7 @@ docker-compose up -d
 uvicorn main:app --reload
 ```
 
-Accede a la documentación interactiva en: `http://localhost:8000/docs`
+[Accede a la documentación interactiva](http://localhost:8000/docs)
 
 ## 📦 Ejemplo de uso
 
