@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
-      OWNER: ${{ github.repository_owner }}
+      OWNER: megahelio  # tu usuario personal
 
     steps:
       - name: Checkout code
@@ -31,8 +31,8 @@ jobs:
           file: ./app/backend/docker/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/quiminhoca-backend:latest
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/quiminhoca-backend:${{ github.sha }}
+            ghcr.io/megahelio/quiminhoca-backend:latest
+            ghcr.io/megahelio/quiminhoca-backend:${{ github.sha }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v4
@@ -41,5 +41,5 @@ jobs:
           file: ./app/frontend/docker/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/quiminhoca-frontend:latest
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/quiminhoca-frontend:${{ github.sha }}
+            ghcr.io/megahelio/quiminhoca-frontend:latest
+            ghcr.io/megahelio/quiminhoca-frontend:${{ github.sha }}
