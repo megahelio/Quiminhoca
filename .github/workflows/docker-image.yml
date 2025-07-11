@@ -12,6 +12,9 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: megahelio  # tu usuario personal
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout code
