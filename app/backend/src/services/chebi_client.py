@@ -24,7 +24,7 @@ def get_lite_entity(formula):
         return result
 
     except Fault as fault:
-        print("Error SOAP:", fault)
+        logger.error(f"Error SOAP: {fault}")
 
 
 
