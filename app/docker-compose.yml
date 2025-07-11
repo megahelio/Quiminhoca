@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: docker/Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - foo_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
+    # ports:
+    #   - "8000:8000"
+    networks:
+      - foo_net
+
+networks:
+  foo_net:
+    driver: bridge
