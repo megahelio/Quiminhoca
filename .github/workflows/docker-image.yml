@@ -1,0 +1,48 @@
+name: Build and push images
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      OWNER: megahelio  # tu usuario personal
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./app/backend
+          file: ./app/backend/docker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/megahelio/quiminhoca-backend:latest
+            ghcr.io/megahelio/quiminhoca-backend:${{ github.sha }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./app/frontend
+          file: ./app/frontend/docker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/megahelio/quiminhoca-frontend:latest
+            ghcr.io/megahelio/quiminhoca-frontend:${{ github.sha }}
