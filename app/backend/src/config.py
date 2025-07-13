@@ -2,6 +2,7 @@ import os
 import redis
 import logging
 import sys
+from utils.redis_service import RedisService
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG").upper()
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
@@ -26,8 +27,8 @@ REDIS_DB = int(os.getenv("REDIS_DB", 0))
 
 # Conexión a Redis
 try:
-    redis_server = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
-    redis_server.ping()
+    redis_server = RedisService(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+    redis_server.ping() # Raises exception
     logger.info("Conexión a Redis establecida.")
 except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError) as e:
     logger.warning("Funcionando sin caché de Redis")

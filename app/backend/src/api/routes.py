@@ -1,7 +1,8 @@
-import traceback
+from typing import Callable
+from models.sources_enum import SourceEnum
 from fastapi import APIRouter, HTTPException
 from models.formula_request import FormulaRequest
-from utils.cache import get_cache_key
+from utils.redis_service import RedisService
 from config import redis_server, get_logger
 import importlib
 import json
@@ -20,7 +21,7 @@ logger = get_logger(__name__)
             "content": {
                 "application/json": {
                     "example": {
-                        "source": "pubchem",
+                        "source": "PUBCHEM",
                         "cached": False,
                         "results": [
                             {
@@ -43,32 +44,24 @@ def lookup_formula(req: FormulaRequest):
     results = []
     for source in req.sources:
         source_func = get_source_function(source)
-
-        cache_key = get_cache_key(req.formula.upper(), source)
-        if redis_server and redis_server.exists(cache_key):
-            source_results = json.loads(redis_server.get(cache_key).decode("utf-8"))
-            cached = True
-        else:
-            source_results = source_func(req)
-            if redis_server:
-                redis_server.set(cache_key, json.dumps(source_results), ex=86400)
-            cached = False
+        
+        source_results = source_func(req)
+           
         results.append({
             "source": source,
-            "cached": cached,
             "results": source_results
         })
     return results
 
-def get_source_function(source: str):
-    # Cada fuente debe tener un módulo llamado services.{source}_service y una función llamada query
-    module_name = f"services.{source}_service"
-    func_name = "query"
+def get_source_function(source: SourceEnum) -> Callable:
+    module_name = f"services.{source.value.lower()}_service"
+    class_name = f"{source.value.capitalize()}Service"
     try:
-        logger.info(f"{source} {module_name} {func_name}")
         module = importlib.import_module(module_name)
-        return getattr(module, func_name)
+        service_class = getattr(module, class_name)
+        return service_class.query
+
     except (ModuleNotFoundError, AttributeError) as e:
-        logger.error(f"Error importando {module_name}.{func_name}: {e}")
-        # logger.error(traceback.format_exc())
+        logger.error(f"Error importando {module_name}.{class_name}.query: {e}")
         raise HTTPException(status_code=400, detail=f"Fuente no soportada: {source}")
+

@@ -11,7 +11,7 @@ with StringIO() as buf:
         client.wsdl.dump()
     wsdl_output = buf.getvalue()
 
-filename = f"chebi_wsdl_dumps/chebi_wsdl_dump_{datetime.now():%Y-%m-%d_%H-%M-%S}.txt"
+filename = f"chebi_wsdl_specs_dumps/chebi_wsdl_specs_dump_{datetime.now():%Y-%m-%d_%H-%M-%S}.txt"
 with open(filename, 'w', encoding='utf-8') as f:
     f.write(wsdl_output)
 print(f"Guardado en: {filename}")

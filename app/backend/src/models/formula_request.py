@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel, Field
+from models.sources_enum import SourceEnum
 
 class FormulaRequest(BaseModel):
     formula: str = Field(
@@ -10,8 +11,8 @@ class FormulaRequest(BaseModel):
         default=None,
         description="Masa molecular (opcional)."
     )
-    sources: list[str] = Field(
-        default=["pubchem"],
-        examples=[["pubchem"], ["pubchem", "other_source"]],
+    sources: list[SourceEnum] = Field(
+        default=["PUBCHEM"],
+        examples=[["PUBCHEM"], ["PUBCHEM", "CHEBI"]],
         description="Lista de fuentes para buscar. Actualmente solo se soporta [PubChem](https://pubchem.ncbi.nlm.nih.gov/)."
     )

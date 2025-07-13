@@ -10,7 +10,7 @@ services:
     depends_on:
       - backend
     networks:
-      - foo_net
+      - front_back
 
   backend:
     build:
@@ -19,8 +19,20 @@ services:
     # ports:
     #   - "8000:8000"
     networks:
-      - foo_net
+      - front_back
+      - back_redis
+
+  redis:
+    image: redis:latest
+    container_name: redis-server
+    networks:
+      - back_redis
+    volumes:
+      - ./redis-data:/data
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
 
 networks:
-  foo_net:
+  front_back:
+    driver: bridge
+  back_redis:
     driver: bridge
