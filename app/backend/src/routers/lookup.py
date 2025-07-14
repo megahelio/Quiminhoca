@@ -2,16 +2,14 @@ from typing import Callable
 from models.sources_enum import SourceEnum
 from fastapi import APIRouter, HTTPException
 from models.formula_request import FormulaRequest
-from utils.redis_service import RedisService
-from config import redis_server, get_logger
+from config import get_logger
 import importlib
-import json
 
-router = APIRouter()
+lookupRouter = APIRouter()
 
 logger = get_logger(__name__)
 
-@router.post(
+@lookupRouter.post(
     "/lookup",
     summary="Buscar compuestos por fórmula química",
     description="Consulta bases de datos químicas públicas para obtener información sobre compuestos a partir de su fórmula molecular.",

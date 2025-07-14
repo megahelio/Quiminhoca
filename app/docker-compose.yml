@@ -16,11 +16,27 @@ services:
     build:
       context: ./backend
       dockerfile: docker/Dockerfile
-    # ports:
-    #   - "8000:8000"
+    ports:
+      - "8000:8000"
     networks:
       - front_back
       - back_redis
+      - back_mariadb
+
+  mariadb:
+    image: mariadb:11
+    restart: always
+    environment:
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+    ports:
+      - "3306:3306"
+    networks:
+      - back_mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
 
   redis:
     image: redis:latest
@@ -36,3 +52,8 @@ networks:
     driver: bridge
   back_redis:
     driver: bridge
+  back_mariadb:
+    driver: bridge
+
+volumes:
+  mariadb_data:
