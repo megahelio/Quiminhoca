@@ -1,4 +1,3 @@
-// App.tsx - Componente principal
 import { useState } from "react";
 import { SearchForm } from "@/components/search-form";
 import { ChemicalCard } from "@/components/details-card-molecule";
@@ -9,7 +8,7 @@ interface DataStructure {
   molar_mass: number;
 }
 
-function Search() {
+export default function Search() {
   const [data, setData] = useState<DataStructure | null>(null);
 
   return (
@@ -19,5 +18,3 @@ function Search() {
     </div>
   );
 }
-
-export default Search;

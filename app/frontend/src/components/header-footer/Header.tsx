@@ -10,6 +10,9 @@ export default function Header() {
           <Link to="/">
             <Button variant="ghost">Inicio</Button>
           </Link>
+          <Link to="/login">
+            <Button variant="ghost">Login</Button>
+          </Link>
           <ModeToggle></ModeToggle>
         </nav>
       </div>

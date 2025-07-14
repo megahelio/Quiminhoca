@@ -1,0 +1,15 @@
+{
+  "email": {
+    "invalid": "Formato de correo inválido"
+  },
+  "password": {
+    "string": "Campo requerido",
+    "minLength": "La contraseña debe tener al menos 8 caracteres",
+    "maxLength": "La contraseña debe tener como máximo 20 caracteres",
+    "uppercase": "Debe incluir una letra mayúscula",
+    "lowercase": "Debe incluir una letra minúscula",
+    "number": "Debe incluir un número",
+    "specialChar": "Debe incluir un carácter especial",
+    "passwordsMismatch": "Las contraseñas no coinciden"
+  }
+}
