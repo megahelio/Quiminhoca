@@ -6,6 +6,8 @@ RUN npm i -g serve
 COPY ../. .
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:stable-alpine
+WORKDIR /
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

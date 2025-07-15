@@ -7,6 +7,7 @@ services:
       NODE_ENV: production
     ports:
       - "80:80"
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
@@ -16,8 +17,13 @@ services:
     build:
       context: ./backend
       dockerfile: docker/Dockerfile
+    env_file: ".env"
+    restart: unless-stopped
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
+      - mariadb
     networks:
       - front_back
       - back_redis
@@ -25,7 +31,7 @@ services:
 
   mariadb:
     image: mariadb:11
-    restart: always
+    restart: unless-stopped
     environment:
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
@@ -46,6 +52,12 @@ services:
     volumes:
       - ./redis-data:/data
     command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
 networks:
   front_back:

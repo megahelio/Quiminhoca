@@ -1,5 +1,5 @@
 {
-  "conventionalCommits.scopes": ["data", "backend", "frontend"],
+  "conventionalCommits.scopes": ["data", "backend", "frontend", "deploy"],
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
     "editor.formatOnSave": true
