@@ -7,20 +7,65 @@ services:
       NODE_ENV: production
     ports:
       - "80:80"
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
-      - foo_net
+      - front_back
 
   backend:
     build:
       context: ./backend
       dockerfile: docker/Dockerfile
-    # ports:
-    #   - "8000:8000"
+    env_file: ".env"
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - mariadb
     networks:
-      - foo_net
+      - front_back
+      - back_redis
+      - back_mariadb
+
+  mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+    ports:
+      - "3306:3306"
+    networks:
+      - back_mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: redis-server
+    networks:
+      - back_redis
+    volumes:
+      - ./redis-data:/data
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
 networks:
-  foo_net:
+  front_back:
     driver: bridge
+  back_redis:
+    driver: bridge
+  back_mariadb:
+    driver: bridge
+
+volumes:
+  mariadb_data:

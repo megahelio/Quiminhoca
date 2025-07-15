@@ -18,13 +18,14 @@ def get_lite_entity(formula):
         result = client.service.getLiteEntity(
             search=formula,
             searchCategory=search_type_enum("ALL"),
-            stars=stars_category_enum("ALL"),  
-            maximumResults=20,
+            stars=stars_category_enum("ALL"),
+            maximumResults=20 
         )
         return result
 
     except Fault as fault:
         logger.error(f"Error SOAP: {fault}")
+        raise fault
 
 
 

@@ -1,0 +1,15 @@
+{
+  "email": {
+    "invalid": "Invalid email format"
+  },
+  "password": {
+    "string": "Required field",
+    "minLength": "Password must be at least 8 characters",
+    "maxLength": "Password must be at most 20 characters",
+    "uppercase": "Must include an uppercase letter",
+    "lowercase": "Must include a lowercase letter",
+    "number": "Must include a number",
+    "specialChar": "Must include a special character",
+    "passwordsMismatch": "Passwords do not match"
+  }
+}

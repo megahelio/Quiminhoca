@@ -1,0 +1,13 @@
+{
+  "conventionalCommits.scopes": ["data", "backend", "frontend", "deploy"],
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "[javascript]": { "editor.formatOnSave": true },
+  "[html]": { "editor.formatOnSave": true }
+}
