@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 # COPY ../../.env .
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY src/ ./src
+COPY quiminhoca-backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY quiminhoca-backend/src/ ./src
 WORKDIR /app/src
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 # Remove Expose to prod

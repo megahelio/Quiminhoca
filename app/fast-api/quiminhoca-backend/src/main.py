@@ -35,7 +35,8 @@ app.include_router(authRouter)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # o tu dominio frontend
+    allow_origins=["http://localhost"],  # o tu dominio frontend
+    allow_origin_regex="http://localhost:\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

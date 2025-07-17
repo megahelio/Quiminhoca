@@ -16,6 +16,7 @@ import { loginSchema, type LoginFormData } from "@/lib/schemas/auth";
 import { useState } from "react";
 import { login } from "@/lib/services/auth-service";
 import { Loader2Icon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function LoginForm({
   className,
@@ -78,12 +79,12 @@ export function LoginForm({
                     <FormItem>
                       <div className="flex items-center justify-between">
                         <FormLabel>Password</FormLabel>
-                        <a
-                          href="#"
+                        <Link
+                          to="#"
                           className="text-sm underline-offset-2 hover:underline"
                         >
                           Forgot your password?
-                        </a>
+                        </Link>
                       </div>
                       <FormControl>
                         <Input
@@ -111,9 +112,9 @@ export function LoginForm({
 
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
-                  <a href="/signup" className="underline underline-offset-4">
+                  <Link to="/signup" className="underline underline-offset-4">
                     Sign up
-                  </a>
+                  </Link>
                 </div>
               </div>
             </form>
@@ -136,8 +137,8 @@ export function LoginForm({
 
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
         By clicking continue, you agree to our{" "}
-        <a href="/terms">Terms of Service</a> and{" "}
-        <a href="/privacy">Privacy Policy</a>.
+        <Link to="/terms">Terms of Service</Link> and{" "}
+        <Link to="/privacy">Privacy Policy</Link>.
       </div>
     </div>
   );

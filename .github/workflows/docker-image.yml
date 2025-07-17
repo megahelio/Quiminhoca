@@ -30,8 +30,8 @@ jobs:
       - name: Build and push backend image
         uses: docker/build-push-action@v4
         with:
-          context: ./app/backend
-          file: ./app/backend/docker/Dockerfile
+          context: ./app/fast-api
+          file: ./app/fast-api/Dockerfile
           push: true
           tags: |
             ghcr.io/megahelio/quiminhoca-backend:latest
@@ -40,8 +40,8 @@ jobs:
       - name: Build and push frontend image
         uses: docker/build-push-action@v4
         with:
-          context: ./app/frontend
-          file: ./app/frontend/docker/Dockerfile
+          context: ./app/react
+          file: ./app/react/Dockerfile
           push: true
           tags: |
             ghcr.io/megahelio/quiminhoca-frontend:latest
