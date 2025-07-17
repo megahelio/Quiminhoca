@@ -4,7 +4,7 @@ import Search from "./pages/Search";
 import Login from "./pages/Login";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
-import SignUp from "./pages/Sing-up";
+import SignUp from "./pages/Sign-up";
 import Error from "./pages/Error";
 
 export default function AppRoutes() {

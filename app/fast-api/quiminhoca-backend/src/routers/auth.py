@@ -14,7 +14,7 @@ from db.database import get_session, engine
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY_JWT = os.getenv("SECRET_KEY_JWT")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -23,7 +23,7 @@ authRouter = APIRouter()
 def create_access_token(data: dict):
     to_encode = data.copy()
     to_encode["exp"] = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, SECRET_KEY_JWT, algorithm=ALGORITHM)
 
 @authRouter.post("/register", response_model=Token)
 def register(user: UserCreate, db: Session = Depends(get_session)):

@@ -17,6 +17,7 @@ import { signUpSchema, type SignUpFormData } from "@/lib/schemas/auth";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { register } from "@/lib/services/auth-service";
+import { Link } from "react-router-dom";
 
 export function SignUpForm({
   className,
@@ -107,9 +108,9 @@ export function SignUpForm({
 
                 <div className="text-center text-sm">
                   Already have an account?{" "}
-                  <a href="/login" className="underline underline-offset-4">
+                  <Link to="/login" className="underline underline-offset-4">
                     Login
-                  </a>
+                  </Link>
                 </div>
               </div>
             </form>
@@ -119,8 +120,8 @@ export function SignUpForm({
 
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
         By clicking continue, you agree to our{" "}
-        <a href="/terms">Terms of Service</a> and{" "}
-        <a href="/privacy">Privacy Policy</a>.
+        <Link to="/terms">Terms of Service</Link> and{" "}
+        <Link to="/privacy">Privacy Policy</Link>.
       </div>
     </div>
   );

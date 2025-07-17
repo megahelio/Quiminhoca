@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import os
 from fastapi import FastAPI
 import sqlalchemy
 from sqlmodel import SQLModel
@@ -28,14 +29,15 @@ async def lifespan(app: FastAPI):
     
     logger.info("Aplicación cerrándose...")
     
-app = FastAPI(title="Quiminhoca", lifespan=lifespan)
+app = FastAPI(title="Quiminhoca", lifespan=lifespan, root_path="/api")
 
 app.include_router(lookupRouter)
 app.include_router(authRouter)
-
+origins = os.getenv("FAST_API_CORS")
+allowed_origins = [origin.strip() for origin in origins.split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # o tu dominio frontend
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

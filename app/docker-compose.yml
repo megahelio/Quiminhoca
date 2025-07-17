@@ -1,71 +1,65 @@
 services:
-  frontend:
+  react:
     build:
-      context: ./frontend
-      dockerfile: docker/Dockerfile
+      context: ./react
+      dockerfile: Dockerfile
+      args:
+        VITE_FRONTEND_BASE_URL: ${VITE_FRONTEND_BASE_URL:-/quiminhoca/}
+        VITE_API_URL: ${VITE_API_URL:-localhost/api}
+
+    restart: unless-stopped
     environment:
       NODE_ENV: production
+      VITE_FRONTEND_BASE_URL: ${VITE_FRONTEND_BASE_URL:-/quiminhoca/}
+      VITE_API_URL: ${VITE_API_URL:-localhost/api}
     ports:
-      - "80:80"
-    restart: unless-stopped
-    depends_on:
-      - backend
+      - "${FRONTEND_HTTP_PORT:-80}:80"
     networks:
-      - front_back
+      - quiminhoca-network
 
-  backend:
+  fast-api:
     build:
-      context: ./backend
-      dockerfile: docker/Dockerfile
-    env_file: ".env"
+      context: ./fast-api
+      dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "8000:8000"
+    env_file: ".env"
+    networks:
+      - quiminhoca-network
     depends_on:
       - redis
       - mariadb
-    networks:
-      - front_back
-      - back_redis
-      - back_mariadb
 
   mariadb:
-    image: mariadb:11
+    image: mariadb
     restart: unless-stopped
     environment:
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-    ports:
-      - "3306:3306"
+      MARIADB_USER: ${MARIADB_USER:-quiminhoca}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-changeme}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-changeme}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-quiminhoca_db}
     networks:
-      - back_mariadb
+      - quiminhoca-network
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - quiminhoca-mariadb:/var/lib/mysql
 
   redis:
     image: redis:latest
-    container_name: redis-server
-    networks:
-      - back_redis
-    volumes:
-      - ./redis-data:/data
-    command: ["redis-server", "--save", "", "--appendonly", "no"]
     restart: unless-stopped
+    networks:
+      - quiminhoca-network
+    volumes:
+      - quiminhoca-redis:/data
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 3s
       retries: 5
 
-networks:
-  front_back:
-    driver: bridge
-  back_redis:
-    driver: bridge
-  back_mariadb:
-    driver: bridge
-
 volumes:
-  mariadb_data:
+  quiminhoca-mariadb:
+  quiminhoca-redis:
+
+networks:
+  quiminhoca-network:
+    driver: bridge

@@ -6,7 +6,7 @@ load_dotenv()
 
 DB_USER = os.getenv("MARIADB_USER")
 DB_PASSWORD = os.getenv("MARIADB_PASSWORD")
-DB_HOST = os.getenv("MARIADB_HOST", "localhost")
+DB_HOST = os.getenv("MARIADB_HOST", "mariadb")
 DB_NAME = os.getenv("MARIADB_DATABASE")
 DB_PORT = os.getenv("MARIADB_DATABASE_PORT", "3306")
 
