@@ -16,7 +16,7 @@ import { loginSchema, type LoginFormData } from "@/lib/schemas/auth";
 import { useState } from "react";
 import { login } from "@/lib/services/auth-service";
 import { Loader2Icon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import blackboard_dark from "@/assets/blackboard-dark.png";
 import blackboard_light from "@/assets/blackboard-light.png";
 
@@ -29,12 +29,16 @@ export function LoginForm({
   });
 
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormData) => {
     console.log("Login data:", data);
     setLoading(true);
     try {
       await login(data.email, data.password);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }

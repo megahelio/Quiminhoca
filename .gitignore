@@ -2,3 +2,4 @@
 **/__pycache__
 .venv**
 otras apps
+.vscode/settings.json
